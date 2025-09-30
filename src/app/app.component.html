@@ -1,0 +1,101 @@
+<mat-tab-group>
+  <!-- Zakładka O mnie -->
+  <mat-tab label="O mnie">
+    <mat-card class="content-card">
+      <h2>O mnie</h2>
+      <p>
+        Jestem programistą z doświadczeniem w technologiach .NET Core, Angular, SQL i chmurze.
+        Pasjonuję się tworzeniem wydajnych i nowoczesnych aplikacji webowych.
+      </p>
+      <p>
+        Lubię uczyć się nowych technologii i dzielić się wiedzą.
+      </p>
+    </mat-card>
+  </mat-tab>
+
+  <!-- Zakładka Formularz rekrutera -->
+  <mat-tab label="Formularz rekrutera">
+    <mat-card class="content-card">
+      <h2>Wybierz zdolności</h2>
+      <form (ngSubmit)="submit()">
+        <div class="skills-list">
+          <mat-checkbox
+            *ngFor="let skill of skills"
+            [checked]="selectedSkillIds.includes(skill.id)"
+            (change)="onCheckboxChange(skill.id, $event)"
+            >{{ skill.name }}</mat-checkbox
+          >
+        </div>
+        <button mat-raised-button color="primary" [disabled]="loading" type="submit">
+          Wyślij
+        </button>
+      </form>
+
+      <mat-progress-spinner
+        *ngIf="loading"
+        mode="indeterminate"
+        diameter="50"
+        class="spinner"
+      ></mat-progress-spinner>
+
+      <div *ngIf="error" class="error-msg">{{ error }}</div>
+
+      <div *ngIf="skillLevels.length > 0" class="results-section">
+        <h3>Wyniki oceny zdolności</h3>
+        <ngx-charts-bar-vertical
+          [view]="view"
+          [scheme]="colorScheme"
+          [results]="chartData"
+          [gradient]="gradient"
+          [xAxis]="showXAxis"
+          [yAxis]="showYAxis"
+          [legend]="showLegend"
+          [showXAxisLabel]="showXAxisLabel"
+          [showYAxisLabel]="showYAxisLabel"
+          [xAxisLabel]="xAxisLabel"
+          [yAxisLabel]="yAxisLabel"
+          [roundEdges]="roundEdges"
+          [barPadding]="barPadding"
+        >
+        </ngx-charts-bar-vertical>
+      </div>
+    </mat-card>
+  </mat-tab>
+
+  <!-- Zakładka Kontakt -->
+  <mat-tab label="Kontakt">
+    <mat-card class="content-card contact-card">
+      <h2>Formularz kontaktowy</h2>
+      <form [formGroup]="contactForm" (ngSubmit)="submitContact()">
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Imię i nazwisko</mat-label>
+          <input matInput formControlName="name" />
+          <mat-error *ngIf="contactForm.controls['name'].hasError('required')"
+            >To pole jest wymagane</mat-error
+          >
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Email</mat-label>
+          <input matInput formControlName="email" />
+          <mat-error *ngIf="contactForm.controls['email'].hasError('required')"
+            >To pole jest wymagane</mat-error
+          >
+          <mat-error *ngIf="contactForm.controls['email'].hasError('email')"
+            >Nieprawidłowy format email</mat-error
+          >
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Wiadomość</mat-label>
+          <textarea matInput rows="5" formControlName="message"></textarea>
+          <mat-error *ngIf="contactForm.controls['message'].hasError('required')"
+            >To pole jest wymagane</mat-error
+          >
+        </mat-form-field>
+
+        <button mat-raised-button color="accent" type="submit">Wyślij</button>
+      </form>
+    </mat-card>
+  </mat-tab>
+</mat-tab-group>
